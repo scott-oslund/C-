@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 using namespace std;
 
 const int DIM = 9;
@@ -20,6 +21,18 @@ class soduku{
                 cout<<"-------------------"<<endl;
                 };
 
+		bool solve(bool timer = false){
+			time_t start, end;
+			if(timer){
+				time(&start);
+			}
+			if(timer){
+				time(&end);
+				cout<<"Time to complete: "<<difftime(end,start)<<" seconds"<<endl;
+			}
+			return true; // will return false if unsolvable
+		}
+
         private:
                 struct square{
                         int solution = 0;
@@ -31,5 +44,7 @@ class soduku{
 int main(){
   soduku s;
   s.simple_print();
+  s.solve();
+  s.solve(true);
 }
 
