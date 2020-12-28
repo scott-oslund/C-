@@ -36,9 +36,30 @@ class soduku{
         private:
                 struct square{
                         int solution = 0;
-                        int possible[9] = {1,2,3,4,5,6,7,8,9};
+                        int possible[DIM] = {1,2,3,4,5,6,7,8,9};
                 };
-                square board[9][9];
+                square board[DIM][DIM];
+
+		bool update(int row, int col, int rule_out){
+				for(int i=0; i<DIM; i++){ // iterating through possible
+					bool solvable = true;
+					
+				}
+		}
+
+		void col_prop(){
+				for(int i=0; i<DIM; i++){
+					
+				}
+		}
+
+		void row_prop(){
+
+		}
+
+		void block_prop(){
+
+		}
 };
 
 int main(){
