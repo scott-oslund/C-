@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <assert.h>
+#include "set.h"
 using namespace std;
 
 const int DIM = 9;
@@ -27,6 +28,9 @@ class soduku{
 			if(timer){
 				time(&start);
 			}
+			
+			recursivley_solve();
+				
 			if(timer){
 				time(&end);
 				cout<<"Time to complete: "<<difftime(end,start)<<" seconds"<<endl;
@@ -38,18 +42,13 @@ class soduku{
                 struct square{
                         int solution = 0;
                         int possible[DIM] = {1,2,3,4,5,6,7,8,9};
-			int value = -1 // updating with the number the square must be
+			int value = -1; // updating with the number the square must be
                 };
                 square board[DIM][DIM];
 
-		struct coord{
-			int x = -1; // -1 for invalid coord
-			int y = -1;
-		}
-
-		inline int lookup(coord){
+		inline int lookup(coord c){
 			/* intakes a coordinate and returns the value of that square on the board. returns -1 if the square is not yet determined */
-			return board[coord.row][coord.col].value;
+			return board[c.row][c.col].value;
 		}
 
 		bool update(int row, int col, int rule_out){
@@ -63,7 +62,7 @@ class soduku{
 							return false;
 						}
 						solved = true;
-						singleton = board[row][col].possible[i]
+						singleton = board[row][col].possible[i];
 					}
 				}
 			if(solved){
@@ -72,19 +71,41 @@ class soduku{
 			return solved;
 		}
 
-		void prop(coord){
+		void prop(coord c){
 			/* intakes a square with a single value and updates the possibilities of other squares accordingly */
 			// make a data type to store to propogate values
-			int prop_value = lookup(coord);
+			int prop_value = lookup(c);
 			if(prop_value = -1){
-				return
+				return;
 			}
 				// updating rows
 				for(int i=0; i<DIM; i++){
-					if(coord.row != i){		
-		
+					if(c.col != i){		
+						update(c.row,i,prop_value);
 					}
 				}
+
+				// updating columns
+				for(int i=0; i<DIM; i++){
+					if(c.row != i){
+						update(i,c.col,prop_value);
+					}
+				}
+
+				// updating the coordinate's block
+				x = c.row / 3; // integer division
+				y = c.col / 3;
+				for(int i = 0; i < 3; i++){
+					for(int j = 0; j < 3; j++){
+						if(x+i != c.row || y+j != c.col){
+							update(x+i,y+j,prop_value);
+						}
+					}
+				}
+		}
+
+		void recusivley_solve(){
+			
 		}
 };
 
