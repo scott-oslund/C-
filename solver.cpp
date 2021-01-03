@@ -9,7 +9,28 @@ const int DIM = 9;
 class soduku{
 
         public:
-                soduku(){};
+                soduku(){
+			for(int x = 1; x<10; x++){
+				for(int y = 1; y<10; y++){
+					cout<< "Enter value at row "<<x<<" col "<<y<<" (enter 0 if unkown)";
+					int val;
+					cin >> val;
+					//to_prop[x][y] = val;
+					if(val != 0){
+						propogate.to_prop[x-1][y-1] = 1;
+						propogate.num_singleton++;
+						board[x-1][y-1].solution = val;
+						board[x-1][y-1].value = val; // should this always be 1?
+						for(int i=0; i<DIM; i++){
+							if(board[x-1][y-1].possible[i] != val){
+								board[x-1][y-1].possible[i] = 0;
+							}
+						}
+					}				
+				}
+			}
+		
+		};
 
 
                 void simple_print(){
@@ -23,14 +44,29 @@ class soduku{
                 cout<<"-------------------"<<endl;
                 };
 
+		void complex_print(){
+			for(int i=0;i<DIM;i++){
+				for(int j=0;j<DIM;j++){
+					cout<<"[ ";
+					for(int k=0;k<DIM;k++){
+						cout<<board[i][j].possible[k]<<" ";
+					}
+					cout<<"]";
+				}
+				cout<<endl;
+			}
+		}
+
 		bool solve(bool timer = false){
 			time_t start, end;
 			if(timer){
 				time(&start);
 			}
 			
-			recursivley_solve();
-				
+			recusivley_solve();
+			for(int i=0; i<10000; i++);
+			cout << "solving"<<endl;
+			
 			if(timer){
 				time(&end);
 				cout<<"Time to complete: "<<difftime(end,start)<<" seconds"<<endl;
@@ -45,6 +81,8 @@ class soduku{
 			int value = -1; // updating with the number the square must be
                 };
                 square board[DIM][DIM];
+
+		prop_data propogate;
 
 		inline int lookup(coord c){
 			/* intakes a coordinate and returns the value of that square on the board. returns -1 if the square is not yet determined */
@@ -66,7 +104,9 @@ class soduku{
 					}
 				}
 			if(solved){
+				propogate.update_singletons(row,col);
 				board[row][col].value = singleton;
+				board[row][col].solution = singleton;
 			}
 			return solved;
 		}
@@ -75,7 +115,7 @@ class soduku{
 			/* intakes a square with a single value and updates the possibilities of other squares accordingly */
 			// make a data type to store to propogate values
 			int prop_value = lookup(c);
-			if(prop_value = -1){
+			if(prop_value == -1){
 				return;
 			}
 				// updating rows
@@ -93,8 +133,8 @@ class soduku{
 				}
 
 				// updating the coordinate's block
-				x = c.row / 3; // integer division
-				y = c.col / 3;
+				int x = (c.row / 3) * 3; // integer division
+				int y = (c.col / 3) * 3;
 				for(int i = 0; i < 3; i++){
 					for(int j = 0; j < 3; j++){
 						if(x+i != c.row || y+j != c.col){
@@ -105,14 +145,24 @@ class soduku{
 		}
 
 		void recusivley_solve(){
-			
+			coord singleton;
+			do{
+				singleton = propogate.yeild_singletons();
+				if(singleton.row == -1){
+					continue;
+				}
+				cout<<"propogating "<<singleton.row<<singleton.col<<endl;
+				prop(singleton);
+			}while(propogate.num_singleton != 0);
+			cout<<"num left: "<<propogate.num_singleton<<endl;
 		}
 };
 
 int main(){
   soduku s;
   s.simple_print();
-  s.solve();
   s.solve(true);
+  s.simple_print();
+  s.complex_print();
 }
 
