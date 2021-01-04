@@ -28,19 +28,21 @@ class prop_data{
 			static int i = 0; // using static to create sudo-generator
 			static int j = 0;
 			for(; i<9; i++){
+				cout<<"i="<<i;
 				for(; j<9; j++){
 					cout<<"testing "<<i<<j<<endl;
 					if(to_prop[i][j] == 1){
 						coord x = {i,j};
 						to_prop[i][j] = -1;
 						num_singleton--;
+						i++;
 						return x;
 					}
 				}
 				cout<<"UPDATING ROW"<<endl;
+				j=0;
 			}
 			i = 0; // reset static variables
-			j = 0;
 			coord invalid;
 			return invalid;
 		}

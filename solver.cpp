@@ -15,7 +15,6 @@ class soduku{
 					cout<< "Enter value at row "<<x<<" col "<<y<<" (enter 0 if unkown)";
 					int val;
 					cin >> val;
-					//to_prop[x][y] = val;
 					if(val != 0){
 						propogate.to_prop[x-1][y-1] = 1;
 						propogate.num_singleton++;
@@ -65,7 +64,6 @@ class soduku{
 			
 			recusivley_solve();
 			for(int i=0; i<10000; i++);
-			cout << "solving"<<endl;
 			
 			if(timer){
 				time(&end);
@@ -151,10 +149,12 @@ class soduku{
 				if(singleton.row == -1){
 					continue;
 				}
-				cout<<"propogating "<<singleton.row<<singleton.col<<endl;
 				prop(singleton);
 			}while(propogate.num_singleton != 0);
-			cout<<"num left: "<<propogate.num_singleton<<endl;
+
+			if(num_singleton != 81){
+				
+			}
 		}
 };
 
